@@ -2,14 +2,14 @@ import turtle
 from turtle import done
 import random
 
-word_list = ["ENTER", "SHOUT", "WORD", "LOCOMOTIVE", "TECHNOLOGY", "TURTLE", "PROGRAMMING", "SECURITY", "DESIGN", "ANIMATION", "HACKING", "ROCKET", "ENGINEER", "SCIENCE", "POKEMON", "FORTNITE", "BRAINROT", "SKIBIDI", "TOILET"]
+word_list = ["ENTER", "SHOUT", "LOCOMOTIVE", "TECHNOLOGY", "TURTLE", "PROGRAMMING", "SECURITY", "DESIGN", "ANIMATION", "HACKING", "ROCKET", "ENGINEER", "SCIENCE", "POKEMON", "FORTNITE", "BRAINROT", "SKIBIDI", "TOILET"]
 secret_answer = random.choice(word_list) #Selects a random word from the list above
 guessed_input = ["_"] * len(secret_answer) #this will print the amount of _ according to the length of the answer
 
 wrong_tries = 0
 max_tries = 6
 
-# opening a screen for Turtle, using in build turtle method.
+# settings for the screen for Turtle, using in build turtle method.
 
 screen = turtle.Screen()
 screen.title("Eric's Hangman")
@@ -21,7 +21,7 @@ screen.bgcolor("Black")
 pen = turtle.Turtle()
 pen.pensize(5)
 pen.color("White")
-pen.speed(5)
+pen.speed(0) #0 is instant
 
 
 # Function for the Gallows
@@ -43,37 +43,37 @@ draw_gallows()
 
 
 # Function for the man
-def draw_hangman(tries): # has arg "tries" because you want to draw the hangman as you get stuff wrong., dont want to draw it straight away
-    if tries == 1: #drawing head
+def draw_hangman(wrong_tries): # has arg "wrong_tries because you want to draw the hangman as you get stuff wrong., dont want to draw it straight away
+    if wrong_tries == 1: #drawing head
         pen.penup()
         pen.goto(0, 200)
         pen.pendown()
         pen.circle(50) #radius
-    elif tries == 2: #body
+    elif wrong_tries == 2: #body
         pen.penup()
         pen.goto(0, 200)
         pen.pendown()
         pen.right(90)
         pen.forward(300)
-    elif tries == 3: # Left hand
+    elif wrong_tries == 3: # Left hand
         pen.penup()
         pen.goto(0, 150)
         pen.pendown()
         pen.right(45)
         pen.forward(150)
-    elif tries == 4: # Right Hand
+    elif wrong_tries == 4: # Right Hand
         pen.penup()
         pen.goto(0, 150)
         pen.pendown()
         pen.left(90)
         pen.forward(150)
-    elif tries == 5: #Left Leg
+    elif wrong_tries == 5: #Left Leg
         pen.penup()
         pen.goto(0, -100)
         pen.pendown()
         pen.right(90)
         pen.forward(150)
-    elif tries == 6: #Right Leg
+    elif wrong_tries == 6: #Right Leg
         pen.penup()
         pen.goto(0, -100)
         pen.pendown()
@@ -81,7 +81,7 @@ def draw_hangman(tries): # has arg "tries" because you want to draw the hangman 
         pen.forward(150)
     
 
-
+# I want it to pop up in your face that you have failed to guess the correct word. You must never forget your incompetence.
 def win_screen():
     pen.hideturtle()
     pen.color("Green")
@@ -102,22 +102,23 @@ def lose_screen():
               font=("Courier", 30, "bold")
     )
 
-guessed_letters = []
+guessed_letters = [] # Stores guessed letters in a string, updates on line 115
 guessed_pen = turtle.Turtle()
-word_pen = turtle.Turtle() #need to define this because if not then .clear() will clear the hangman
+word_pen = turtle.Turtle() #need to define these because if not then .clear() will clear the hangman
 
-while wrong_tries < max_tries:
-    guess = screen.textinput("Type a Letter: ", "").upper() #input validation
-    if not guess or not guess.isalpha() or len(guess) != 1: #always check for empty input before string methods
+while wrong_tries < max_tries: # While the player is still in game
+    guess = screen.textinput("Type a Letter: ", "").upper() # makes a window for text input
+    if not guess or not guess.isalpha() or len(guess) != 1: # INPUT VALIDATION!! always check for empty input before string methods i
         print("Please enter a single alphabet")
         continue
     
-    guessed_letters.append(guess)
+    guessed_letters.append(guess) # Adds the guessed letters to guessed_letters
 
-    if guess in secret_answer:
-        for i, letter in enumerate(secret_answer): #if there are multiple of the same letter in my word, it will update and pop up
-            if letter == guess:
-                guessed_input[i] = guess
+    # it is important to index (i). if say secret_answer was "hello", list(enumerate(secret_answer) --> (0, H), (1, E), (2, L) etc etc
+    if guess in secret_answer: # If the letter is found in secret_answer
+        for i, letter in enumerate(secret_answer): # this means go through every character in secret_answer, starting from i (0, ie the first letter), and return the letter and the position.
+            if letter == guess: # checks if the guessed letter is in every single position of the secret word
+                guessed_input[i] = guess #changes guessed_input to the letter at the correct i position
                 print(f"Nice one! ", (guessed_input))
                 word_pen.clear()
                 word_pen.color("White")
@@ -126,8 +127,8 @@ while wrong_tries < max_tries:
                 word_pen.write(f"{guessed_input}", align = "Center", font = ("Courier" , 25, "bold"))
 
     else:
-        wrong_tries += 1
-        draw_hangman(wrong_tries)
+        wrong_tries += 1 #adds 1 to wrong_tries
+        draw_hangman(wrong_tries) #starts from step 1
         guessed_pen.penup()
         guessed_pen.color("White")
         guessed_pen.goto(0, -600)
@@ -139,11 +140,10 @@ while wrong_tries < max_tries:
     if wrong_tries == max_tries:
         lose_screen()
         break
-    if "_" not in guessed_input:
+    if "_" not in guessed_input: #When all "_" are filled out ie u won
         win_screen()
         break  # what happens if i leave this out?
     
-
 
 done()
 
