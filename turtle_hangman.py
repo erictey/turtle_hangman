@@ -109,7 +109,7 @@ def lose_screen():
               )
 
 
-guessed_letters = []  # Stores guessed letters in a string, updates on line 115
+guessed_letters = []  # Stores guessed letters in a string, updates on line 126
 guessed_pen = turtle.Turtle()
 # need to define these because if not then .clear() will clear the hangman
 word_pen = turtle.Turtle()
