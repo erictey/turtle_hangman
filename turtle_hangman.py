@@ -29,18 +29,15 @@ pen.speed(0)  # 0 is instant
 
 # Function for the Gallows
 
+
 def draw_gallows():
-    pen.penup()  # Can purposefully leave this one out for kids to figure out whats wrong if this is left out
+    pen.penup()
     pen.goto(0, 300)
-    pen.pendown()  # Same with this one, can leave out for kids to figure out
-    pen.left(90)
-    pen.forward(200)
-    pen.left(90)
-    pen.forward(400)
-    pen.left(90)
-    pen.forward(900)
-    pen.left(90)
-    pen.forward(800)
+    pen.pendown()
+    # zip is a built in function that allows u to loop through 2 lists at the same time
+    for angle, distance in zip([90, 90, 90, 90], [200, 400, 900, 800]):
+        pen.left(angle)
+        pen.forward(distance)
 
 
 draw_gallows()
